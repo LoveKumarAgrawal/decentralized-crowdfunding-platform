@@ -18,10 +18,32 @@ contract CrowdFunding {
 
     uint256 public numberOfCampaigns = 0;
 
-    function createCampaign(address _owner, string memory _title, string memory _description, uint256 _target, uint256 _deadline, string memory _image) public {
-        Campaign storage campaign = campaigns[numberOfCampaigns];
+    event CampaignCreated(
+        uint256 indexed campaignId,
+        address indexed owner,
+        string title,
+        uint256 target,
+        uint256 deadline,
+        string image
+    );
+    
+    event DonationReceived(
+        uint256 indexed campaignId,
+        address indexed donor,
+        uint256 amount
+    );
 
+    function createCampaign(
+        address _owner,
+        string memory _title,
+        string memory _description,
+        uint256 _target,
+        uint256 _deadline,
+        string memory _image
+    ) public {
         require(_deadline > block.timestamp, "The deadline should be a date in the future.");
+        
+        Campaign storage campaign = campaigns[numberOfCampaigns];
         campaign.owner = _owner;
         campaign.title = _title;
         campaign.description = _description;
@@ -30,8 +52,9 @@ contract CrowdFunding {
         campaign.image = _image;
         campaign.amountCollected = 0;
 
+        emit CampaignCreated(numberOfCampaigns, _owner, _title, _target, _deadline, _image);
+        
         numberOfCampaigns++;
-        // Todo - emit an event
     }
 
     function getCampaigns() public view returns (Campaign[] memory) {
@@ -45,12 +68,13 @@ contract CrowdFunding {
         return allCampaigns;
     }
 
-    function getDonators(uint256 _id) view public returns(address[] memory, uint256[] memory) {
+    function getDonators(uint256 _id) public view returns (address[] memory, uint256[] memory) {
         return (campaigns[_id].funders, campaigns[_id].donations);
     }
 
     function donateToCampaign(uint256 _id) public payable {
         uint256 amount = msg.value;
+        require(amount > 0, "Donation amount must be greater than zero.");
 
         Campaign storage campaign = campaigns[_id];
 
@@ -58,8 +82,9 @@ contract CrowdFunding {
         campaign.donations.push(amount);
 
         (bool sent,) = payable(campaign.owner).call{value: amount}("");
-        if(sent) {
-            campaign.amountCollected = campaign.amountCollected + amount;
+        if (sent) {
+            campaign.amountCollected += amount;
+            emit DonationReceived(_id, msg.sender, amount);
         }
     }
 }
