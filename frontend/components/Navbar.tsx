@@ -4,6 +4,7 @@ import { Button } from './ui/button';
 import Link from 'next/link';
 import { useAccount, useConnect, useConnectors, useDisconnect } from 'wagmi';
 import { Power } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 function Navbar() {
 
@@ -11,6 +12,8 @@ function Navbar() {
   const { connect } = useConnect()
   const { address } = useAccount()
   const { disconnect } = useDisconnect()
+  const router = useRouter()
+
 
   const [isClient, setIsClient] = useState(false);
 
@@ -29,10 +32,15 @@ function Navbar() {
         <Link href="/" className="text-xl font-bold mb-4 md:mb-0">
           Decentralized CrowdFunding
         </Link>
-        <div className='flex gap-3 justify-between items-center'>
-          <Button className="bg-slate-100 text-black cursor-pointer" variant='outline'>
+        <div className='flex flex-col md:flex-row gap-3 justify-between items-center'>
+          <Button className="bg-green-400 text-black cursor-pointer" variant='outline' onClick={() => router.push('/create-campaign')}>
             Create a Campaign
           </Button>
+          {
+            address && <Button className="bg-green-400 text-black cursor-pointer" variant='outline' onClick={() => router.push('/my-campaigns')}>
+            My Campaigns
+          </Button>
+          }
           {
             address ?
               <div className='flex gap-2 justify-center items-center'>
