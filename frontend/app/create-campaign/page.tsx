@@ -1,22 +1,47 @@
 "use client"
-import { createNewCampaign } from '@/actions/campaign';
 import FormField from '@/components/FormField';
 import { Button } from '@/components/ui/button';
 import { HandCoins } from 'lucide-react';
-import React, { useState } from 'react'
+import React, { FormEvent, useEffect } from 'react'
+import { useAccount, useWriteContract } from 'wagmi';
+import { abi } from '@/lib/abi';
+import { parseEther } from 'viem'
 
 const CreateCampaign = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const { address } = useAccount()
+  const { 
+    data: hash, 
+    isPending,
+    writeContract 
+  } = useWriteContract() 
 
+  function createNewCampaign(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    const formData = new FormData(e.target as HTMLFormElement)
+    const description = formData.get("description") as string
+    const title = formData.get("title") as string
+    const goal = formData.get("goal") as string
+    const deadline = formData.get("deadline") as string
+    const url = formData.get("url") as string
+
+     // Convert deadline to Unix timestamp (uint256)
+    const deadlineTimestamp = new Date(deadline).getTime() / 1000; // in seconds
+
+    writeContract({
+      address: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+      abi,
+      functionName: 'createCampaign',
+      args: [address, title, description, parseEther(goal), deadlineTimestamp, url],
+    })
+  }
 
   return (
     <div className="bg-[#1c1c24] flex justify-center items-center flex-col sm:p-10 p-4">
-      {isLoading && <div>Loading</div>}
       <div className="flex justify-center items-center p-[16px] sm:min-w-[380px] bg-[#3a3a43] rounded-[10px]">
         <h1 className="font-epilogue font-bold sm:text-[25px] text-[18px] leading-[38px] text-white">Start a Campaign</h1>
       </div>
 
-      <form action={createNewCampaign} className="w-full mt-[65px] flex flex-col gap-[30px]">
+      <form onSubmit={createNewCampaign} className="w-full mt-[65px] flex flex-col gap-[30px]">
         <div className="flex flex-wrap gap-[40px]">
           <FormField 
             labelName="Campaign Title *"
@@ -63,14 +88,16 @@ const CreateCampaign = () => {
           <div className="flex justify-center items-center mt-[30px]">
             <Button
               type="submit"
+              disabled={isPending}
               className="bg-[#1dc071] text-xl p-5 font-bold cursor-pointer"
               variant="secondary"
               >
-            Submit new campaign
+                {isPending ? 'Creating...' : 'Submit new campaign'}
             </Button>
           </div>
       </form>
     </div>
+
   )
 }
 
