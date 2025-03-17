@@ -35,7 +35,11 @@ const page = () => {
     const typedCampaign = campaigns as Campaign[]
 
     return (
-        <div className="mt-3.5 px-3.5">
+        <div className="dark:bg-[#1c1c24] h-[661px]">
+            <div className="text-4xl font-bold text-center">
+            Your Campaigns ({typedCampaign && typedCampaign?.length > 0 ? typedCampaign.length : ""})
+          </div>
+        <div className="sm:p-8 p-4">
             {typedCampaign && typedCampaign?.length > 0 ? (
 
                 <div className="flex flex-wrap gap-4">
@@ -44,10 +48,11 @@ const page = () => {
                     ))}
                 </div>
             ) : (
-                <p className="font-epilogue font-semibold text-[14px] leading-[30px] text-[#818183]">
+                <div className="font-epilogue font-semibold text-4xl leading-[30px] text-[#818183] text-center">
                     You have not created any campigns yet
-                </p>
+                </div>
             )}
+        </div>
         </div>
     );
 }
