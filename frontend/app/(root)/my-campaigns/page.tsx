@@ -1,16 +1,31 @@
 "use client"
-
+import CampaignCard from "@/components/CampaignCard";
+import Navbar from "@/components/Navbar";
 import { abi } from "@/lib/abi"
-import { useReadContract } from "wagmi"
-import { Campaign } from "./my-campaigns/page"
-import CampaignCard from "@/components/CampaignCard"
+import { useAccount, useReadContract } from "wagmi"
 
-export default function Home() {
+export interface Campaign {
+    owner: string;
+    title: string;
+    description: string;
+    target: bigint;
+    deadline: bigint;
+    amountCollected: bigint;
+    image: string;
+    funders: string[];
+    donations: number[];
+}
+
+
+const page = () => {
+
+    const { address } = useAccount()
+
     const { data: campaigns, isPending } = useReadContract({
         address: `0x${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`,
         abi,
-        functionName: 'getCampaigns',
-        args: [],
+        functionName: 'getMyCampaigns',
+        args: [address],
     })
     console.log(campaigns)
 
@@ -19,10 +34,11 @@ export default function Home() {
     }
 
     const typedCampaign = campaigns as Campaign[]
-  return (
-    <div className="dark:bg-[#1c1c24] h-[661px]">
+
+    return (
+        <div className="dark:bg-[#1c1c24] h-full">
             <div className="text-4xl font-bold text-center">
-            All Campaigns ({typedCampaign && typedCampaign?.length > 0 ? typedCampaign.length : ""})
+            Your Campaigns ({typedCampaign && typedCampaign?.length > 0 ? typedCampaign.length : ""})
           </div>
         <div className="sm:p-8 p-4">
             {typedCampaign && typedCampaign?.length > 0 ? (
@@ -39,5 +55,7 @@ export default function Home() {
             )}
         </div>
         </div>
-  );
+    );
 }
+
+export default page
