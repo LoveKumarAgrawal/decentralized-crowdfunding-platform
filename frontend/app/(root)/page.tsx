@@ -19,27 +19,25 @@ export default function Main() {
     }
 
     const typedCampaign = campaigns as Campaign[]
-  return (
-    <>
-    <div className="dark:bg-[#1c1c24] h-full">
+    return (
+        <div className="dark:bg-[#1c1c24] h-full">
             <div className="text-4xl font-bold text-center">
-            All Campaigns ({typedCampaign && typedCampaign?.length > 0 ? typedCampaign.length : ""})
-          </div>
-        <div className="sm:p-8 p-4">
-            {typedCampaign && typedCampaign?.length > 0 ? (
-                
-                <div className="flex flex-wrap gap-4">
-                    {typedCampaign.map((campaign, index) => (
-                        <CampaignCard {...campaign} key={index} />
-                    ))}
-                </div>
-            ) : (
-                <div className="font-epilogue font-semibold text-4xl leading-[30px] text-[#818183] text-center">
-                    Sorry! does not have any campaigns
-                </div>
-            )}
+                All Campaigns ({typedCampaign && typedCampaign?.length > 0 ? typedCampaign.length : ""})
+            </div>
+            <div className="sm:p-8 p-4">
+                {typedCampaign && typedCampaign?.length > 0 ? (
+
+                    <div className="flex flex-wrap gap-4">
+                        {typedCampaign.map((campaign, index) => (
+                            <CampaignCard {...campaign} key={index} />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="font-epilogue font-semibold text-4xl leading-[30px] text-[#818183] text-center">
+                        Sorry! does not have any campaigns
+                    </div>
+                )}
+            </div>
         </div>
-        </div>
-        </>
-  );
+    );
 }

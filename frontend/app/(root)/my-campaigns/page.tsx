@@ -1,6 +1,5 @@
 "use client"
 import CampaignCard from "@/components/CampaignCard";
-import Navbar from "@/components/Navbar";
 import { abi } from "@/lib/abi"
 import { useAccount, useReadContract } from "wagmi"
 
@@ -17,7 +16,7 @@ export interface Campaign {
 }
 
 
-const page = () => {
+const MyCampaigns = () => {
 
     const { address } = useAccount()
 
@@ -38,24 +37,24 @@ const page = () => {
     return (
         <div className="dark:bg-[#1c1c24] h-full">
             <div className="text-4xl font-bold text-center">
-            Your Campaigns ({typedCampaign && typedCampaign?.length > 0 ? typedCampaign.length : ""})
-          </div>
-        <div className="sm:p-8 p-4">
-            {typedCampaign && typedCampaign?.length > 0 ? (
+                Your Campaigns ({typedCampaign && typedCampaign?.length > 0 ? typedCampaign.length : ""})
+            </div>
+            <div className="sm:p-8 p-4">
+                {typedCampaign && typedCampaign?.length > 0 ? (
 
-                <div className="flex flex-wrap gap-4">
-                    {typedCampaign.map((campaign, index) => (
-                        <CampaignCard {...campaign} key={index} />
-                    ))}
-                </div>
-            ) : (
-                <div className="font-epilogue font-semibold text-4xl leading-[30px] text-[#818183] text-center">
-                    You have not created any campigns yet
-                </div>
-            )}
-        </div>
+                    <div className="flex flex-wrap gap-4">
+                        {typedCampaign.map((campaign, index) => (
+                            <CampaignCard {...campaign} key={index} />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="font-epilogue font-semibold text-4xl leading-[30px] text-[#818183] text-center">
+                        You have not created any campigns yet
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
 
-export default page
+export default MyCampaigns
