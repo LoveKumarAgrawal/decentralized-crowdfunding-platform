@@ -1,10 +1,10 @@
-import { Campaign } from "@/app/(root)/my-campaigns/page";
+import { ClientCampaign } from "@/lib/features/campaignSlice";
 import Image from "next/image";
 import { formatEther } from "viem"
 
-const CampaignCard = ({ owner, title, description, target, deadline, amountCollected, image }: Campaign) => {
+const CampaignCard = ({ owner, title, description, target, deadline, amountCollected, image }: ClientCampaign) => {
 
-  function daysLeft(deadline: bigint) {
+  function daysLeft(deadline: number) {
     const difference = new Date(Number(deadline) * 1000).getTime() - Date.now();
     const remainingDays = difference / (1000 * 3600 * 24);
     return remainingDays.toFixed(0);
@@ -22,8 +22,8 @@ const CampaignCard = ({ owner, title, description, target, deadline, amountColle
 
         <div className="flex justify-between flex-wrap mt-[15px] gap-2">
           <div className="flex flex-col">
-            <h4 className="font-epilogue font-semibold text-[14px] dark:text-[#b2b3bd] leading-[22px]">{formatEther(amountCollected)}</h4>
-            <p className="mt-[3px] font-epilogue font-normal text-[12px] leading-[18px] dark:text-[#808191] sm:max-w-[120px] truncate">Raised of {formatEther(target)}</p>
+            <h4 className="font-epilogue font-semibold text-[14px] dark:text-[#b2b3bd] leading-[22px]">{amountCollected}</h4>
+            <p className="mt-[3px] font-epilogue font-normal text-[12px] leading-[18px] dark:text-[#808191] sm:max-w-[120px] truncate">Raised of {target}</p>
           </div>
           <div className="flex flex-col">
             <h4 className="font-epilogue font-semibold text-[14px] dark:text-[#b2b3bd] leading-[22px]">{daysLeft(deadline)}</h4>

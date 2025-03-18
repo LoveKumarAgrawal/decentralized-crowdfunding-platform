@@ -2,14 +2,19 @@
 import FormField from '@/components/FormField';
 import { Button } from '@/components/ui/button';
 import { HandCoins } from 'lucide-react';
-import React, { FormEvent, useEffect, useRef } from 'react'
+import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import { type BaseError, useAccount, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { abi } from '@/lib/abi';
-import { parseEther } from 'viem';
+import { formatEther, parseEther } from 'viem';
 import { toast } from "react-toastify"
+import { useAppDispatch } from '@/lib/hooks';
+import { Campaign } from '../page';
+import { addCampaign, ClientCampaign } from '@/lib/features/campaignSlice';
 
 const CreateCampaign = () => {
   const { address } = useAccount()
+  const dispatch = useAppDispatch()
+  const [campaign, setCampaign] = useState<ClientCampaign>()
   const {
     data: hash,
     error,
@@ -37,6 +42,19 @@ const CreateCampaign = () => {
       functionName: 'createCampaign',
       args: [address, title, description, parseEther(goal), deadlineTimestamp, url],
     })
+
+    const campaign = {
+      owner: address,
+      title: title,
+      description: description,
+      target: goal,
+      deadline: Number(deadline),
+      amountCollected: "0",
+      image: url,
+      funders: [],
+      donations: []
+    } as ClientCampaign
+    setCampaign(campaign)
   }
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
@@ -59,6 +77,7 @@ const CreateCampaign = () => {
       if (formRef.current) {
         formRef.current.reset(); // Resets the form fields to their initial values
       }
+      dispatch(addCampaign(campaign!))
     }
   }, [error, isConfirmed])
 
