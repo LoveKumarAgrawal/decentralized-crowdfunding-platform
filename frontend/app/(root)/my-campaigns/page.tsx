@@ -1,21 +1,32 @@
 "use client"
 import CampaignCard from "@/components/CampaignCard";
-import { abi } from "@/lib/abi"
 import { ClientCampaign } from "@/lib/features/campaignSlice";
 import { useAppSelector } from "@/lib/hooks";
-import { useAccount, useReadContract } from "wagmi"
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useAccount } from "wagmi"
 
 
 const MyCampaigns = () => {
 
     const { address } = useAccount()
+    const router = useRouter()
+
+    useEffect(() => {
+        if (!address) {
+            router.push("/"); // Perform redirection after the initial render
+        }
+    }, [address, router]);
+
+    // Only continue if there's an address
+    if (!address) return null;
     const allCampaigns: ClientCampaign[] = useAppSelector((state) => state.campaigns.campaigns)
 
     
     const myCampaigns = allCampaigns.filter((campaign) => campaign.owner === address);
 
     return (
-        <div className="dark:bg-[#1c1c24] h-full">
+        <div className="dark:bg-[#1c1c24] min-h-[661px]">
             <div className="text-4xl font-bold text-center">
                 Your Campaigns ({myCampaigns && myCampaigns?.length > 0 ? myCampaigns.length : ""})
             </div>

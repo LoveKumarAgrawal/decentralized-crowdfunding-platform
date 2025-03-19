@@ -5,10 +5,9 @@ import { HandCoins } from 'lucide-react';
 import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import { type BaseError, useAccount, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { abi } from '@/lib/abi';
-import { formatEther, parseEther } from 'viem';
+import { parseEther } from 'viem';
 import { toast } from "react-toastify"
 import { useAppDispatch } from '@/lib/hooks';
-import { Campaign } from '../page';
 import { addCampaign, ClientCampaign } from '@/lib/features/campaignSlice';
 
 const CreateCampaign = () => {

@@ -1,7 +1,7 @@
 "use client"
 
 import { abi } from "@/lib/abi"
-import { useReadContract } from "wagmi"
+import { useAccount, useReadContract } from "wagmi"
 import CampaignCard from "@/components/CampaignCard"
 import { useAppDispatch, useAppSelector } from "@/lib/hooks"
 import { useEffect } from "react"
@@ -21,6 +21,7 @@ export interface Campaign {
 }
 
 export default function Home() {
+    const { address } = useAccount()
     const dispatch = useAppDispatch()
     const typedCampaign: ClientCampaign[] = useAppSelector((state) => state.campaigns.campaigns)
 
@@ -38,7 +39,7 @@ export default function Home() {
                 target: formatEther(campaign.target), // Convert target to ether string
                 amountCollected: formatEther(campaign.amountCollected), // Convert amountCollected to ether string
                 deadline: Number(campaign.deadline) // Convert deadline to number
-            }));
+            }))
             dispatch(setCampaigns(typedCampaign))
         }
     }, [campaigns, isPending, dispatch])
@@ -47,17 +48,16 @@ export default function Home() {
         return <div>Loading</div>
     }
 
-    // Get campaigns from Redux store using useAppSelector
     return (
-        <div className="dark:bg-[#1c1c24] h-full">
+        <div className="dark:bg-[#1c1c24] min-h-[661px]">
             <div className="text-4xl font-bold text-center">
-                All Campaigns ({typedCampaign && typedCampaign?.length > 0 ? typedCampaign.length : ""})
+                All Campaigns ({typedCampaign && typedCampaign?.length > 0 ? typedCampaign.filter((campaign) => campaign.owner !== address).length : ""})
             </div>
             <div className="sm:p-8 p-4">
                 {typedCampaign && typedCampaign?.length > 0 ? (
 
                     <div className="flex flex-wrap gap-4">
-                        {typedCampaign.map((campaign, index) => (
+                        {typedCampaign.filter((campaign) => campaign.owner !== address).map((campaign, index) => (
                             <CampaignCard {...campaign} key={index} />
                         ))}
                     </div>
