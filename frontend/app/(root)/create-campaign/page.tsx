@@ -7,19 +7,25 @@ import { type BaseError, useAccount, useWaitForTransactionReceipt, useWriteContr
 import { abi } from '@/lib/abi';
 import { parseEther } from 'viem';
 import { toast } from "react-toastify"
-import { useAppDispatch } from '@/lib/hooks';
-import { addCampaign, ClientCampaign } from '@/lib/features/campaignSlice';
+import { useRouter } from 'next/navigation';
 
 const CreateCampaign = () => {
+  const router = useRouter()
   const { address } = useAccount()
-  const dispatch = useAppDispatch()
-  const [campaign, setCampaign] = useState<ClientCampaign>()
   const {
     data: hash,
     error,
     isPending,
     writeContract
   } = useWriteContract()
+
+  useEffect(() => {
+    if(!address) {
+      router.push("/")
+    }
+  }, [address, router])
+
+  if (!address) return null;
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -41,19 +47,6 @@ const CreateCampaign = () => {
       functionName: 'createCampaign',
       args: [address, title, description, parseEther(goal), deadlineTimestamp, url],
     })
-
-    const campaign = {
-      owner: address,
-      title: title,
-      description: description,
-      target: goal,
-      deadline: Number(deadline),
-      amountCollected: "0",
-      image: url,
-      funders: [],
-      donations: []
-    } as ClientCampaign
-    setCampaign(campaign)
   }
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
@@ -76,12 +69,11 @@ const CreateCampaign = () => {
       if (formRef.current) {
         formRef.current.reset(); // Resets the form fields to their initial values
       }
-      dispatch(addCampaign(campaign!))
     }
   }, [error, isConfirmed])
 
   return (
-    <div className="bg-[#1c1c24] flex justify-center items-center flex-col sm:p-10 p-4">
+    <div className="dark:bg-[#1c1c24] flex justify-center items-center flex-col sm:p-10 p-4">
       <div className="flex justify-center items-center p-[16px] sm:min-w-[380px] bg-[#3a3a43] rounded-[10px]">
         <h1 className="font-epilogue font-bold sm:text-[25px] text-[18px] leading-[38px] text-white">Start a Campaign</h1>
       </div>

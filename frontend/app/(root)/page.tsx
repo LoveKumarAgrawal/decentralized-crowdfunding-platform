@@ -3,10 +3,6 @@
 import { abi } from "@/lib/abi"
 import { useAccount, useReadContract } from "wagmi"
 import CampaignCard from "@/components/CampaignCard"
-import { useAppDispatch, useAppSelector } from "@/lib/hooks"
-import { useEffect } from "react"
-import { ClientCampaign, setCampaigns } from "@/lib/features/campaignSlice"
-import { formatEther } from "viem"
 
 export interface Campaign {
     owner: string;
@@ -22,8 +18,6 @@ export interface Campaign {
 
 export default function Home() {
     const { address } = useAccount()
-    const dispatch = useAppDispatch()
-    const typedCampaign: ClientCampaign[] = useAppSelector((state) => state.campaigns.campaigns)
 
     const { data: campaigns, isPending } = useReadContract({
         address: `0x${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`,
@@ -32,21 +26,11 @@ export default function Home() {
         args: [],
     })
 
-    useEffect(() => {
-        if (campaigns && !isPending) {
-            const typedCampaign = (campaigns as Campaign[]).map((campaign: Campaign) => ({
-                ...campaign,
-                target: formatEther(campaign.target), // Convert target to ether string
-                amountCollected: formatEther(campaign.amountCollected), // Convert amountCollected to ether string
-                deadline: Number(campaign.deadline) // Convert deadline to number
-            }))
-            dispatch(setCampaigns(typedCampaign))
-        }
-    }, [campaigns, isPending, dispatch])
-
     if (isPending) {
         return <div>Loading</div>
     }
+
+    const typedCampaign = (campaigns as Campaign[])
 
     return (
         <div className="dark:bg-[#1c1c24] min-h-[661px]">

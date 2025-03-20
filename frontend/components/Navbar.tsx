@@ -35,13 +35,17 @@ function Navbar() {
         </Link>
         <div className="flex flex-col md:flex-row gap-3 justify-between items-center">
           <ModeToggle />
-          <Button
+          {
+            address && (
+              <Button
             className="bg-green-400 dark:bg-green-500 cursor-pointer"
             variant="ghost"
             onClick={() => router.push('/create-campaign')}
           >
             Create a Campaign
           </Button>
+            )
+          }
           {address && (
             <Button
               className="bg-green-400 dark:bg-green-500 cursor-pointer"

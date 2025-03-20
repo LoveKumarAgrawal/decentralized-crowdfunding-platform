@@ -1,10 +1,10 @@
 "use client"
 import CampaignCard from "@/components/CampaignCard";
-import { ClientCampaign } from "@/lib/features/campaignSlice";
-import { useAppSelector } from "@/lib/hooks";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useAccount } from "wagmi"
+import { useAccount, useReadContract } from "wagmi"
+import { abi } from "@/lib/abi";
+import { Campaign } from "../page";
 
 
 const MyCampaigns = () => {
@@ -20,21 +20,30 @@ const MyCampaigns = () => {
 
     // Only continue if there's an address
     if (!address) return null;
-    const allCampaigns: ClientCampaign[] = useAppSelector((state) => state.campaigns.campaigns)
 
-    
-    const myCampaigns = allCampaigns.filter((campaign) => campaign.owner === address);
+    const { data: campaigns, isPending } = useReadContract({
+        address: `0x${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`,
+        abi,
+        functionName: 'getMyCampaigns',
+        args: [address],
+    })
+
+    if (isPending) {
+        return <div>Loading</div>
+    }
+
+    const typedCampaign = (campaigns as Campaign[])
 
     return (
         <div className="dark:bg-[#1c1c24] min-h-[661px]">
             <div className="text-4xl font-bold text-center">
-                Your Campaigns ({myCampaigns && myCampaigns?.length > 0 ? myCampaigns.length : ""})
+                Your Campaigns ({typedCampaign && typedCampaign?.length > 0 ? typedCampaign.length : ""})
             </div>
             <div className="sm:p-8 p-4">
-                {myCampaigns && myCampaigns?.length > 0 ? (
+                {typedCampaign && typedCampaign?.length > 0 ? (
 
                     <div className="flex flex-wrap gap-4">
-                        {myCampaigns.map((campaign, index) => (
+                        {typedCampaign.map((campaign, index) => (
                             <CampaignCard {...campaign} key={index} />
                         ))}
                     </div>

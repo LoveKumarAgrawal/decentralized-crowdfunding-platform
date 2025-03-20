@@ -5,12 +5,10 @@ import { config } from "./config"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ToastContainer } from "react-toastify"
 import { ThemeProvider } from "@/components/theme-provider"
-import StoreProvider from "@/components/store-provider"
 
 const queryClient = new QueryClient()
 export const Providers = ({ children }: { children: ReactNode }) => {
     return (
-        <StoreProvider>
             <WagmiProvider config={config}>
                 <QueryClientProvider client={queryClient}>
                     <ThemeProvider
@@ -24,6 +22,5 @@ export const Providers = ({ children }: { children: ReactNode }) => {
                     </ThemeProvider>
                 </QueryClientProvider>
             </WagmiProvider>
-        </StoreProvider>
     )
 }

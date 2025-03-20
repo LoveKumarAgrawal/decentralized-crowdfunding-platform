@@ -3,6 +3,7 @@ pragma solidity ^0.8.13;
 
 contract CrowdFunding {
     struct Campaign {
+        uint256 randomId;
         address owner;
         string title;
         string description;
@@ -33,6 +34,14 @@ contract CrowdFunding {
         uint256 amount
     );
 
+    function generateRandomId(address _owner, uint256 _target) internal view returns (uint256) {
+        return uint256(
+            keccak256(
+                abi.encodePacked(block.timestamp, _owner, _target, numberOfCampaigns)
+            )
+        );
+    }
+
     function createCampaign(
         address _owner,
         string memory _title,
@@ -46,6 +55,9 @@ contract CrowdFunding {
             "The deadline should be a date in the future."
         );
 
+        // Generate a random campaign ID
+        uint256 randomId = generateRandomId(_owner, _target);
+
         Campaign storage campaign = campaigns[numberOfCampaigns];
         campaign.owner = _owner;
         campaign.title = _title;
@@ -54,6 +66,7 @@ contract CrowdFunding {
         campaign.deadline = _deadline;
         campaign.image = _image;
         campaign.amountCollected = 0;
+        campaign.randomId = randomId;
 
         emit CampaignCreated(
             numberOfCampaigns,
