@@ -3,8 +3,10 @@
 import { abi } from "@/lib/abi"
 import { useAccount, useReadContract } from "wagmi"
 import CampaignCard from "@/components/CampaignCard"
+import { useRouter } from "next/navigation";
 
 export interface Campaign {
+    randomId: bigint;
     owner: string;
     title: string;
     description: string;
@@ -13,10 +15,11 @@ export interface Campaign {
     amountCollected: bigint;
     image: string;
     funders: string[];
-    donations: number[];
+    donations: bigint[];
 }
 
 export default function Home() {
+    const router = useRouter()
     const { address } = useAccount()
 
     const { data: campaigns, isPending } = useReadContract({
@@ -32,6 +35,10 @@ export default function Home() {
 
     const typedCampaign = (campaigns as Campaign[])
 
+    const handleNavigate = (randomId: bigint) => {
+        router.push(`/campaign-detail/${randomId}`)
+    }
+
     return (
         <div className="dark:bg-[#1c1c24] min-h-[661px]">
             <div className="text-4xl font-bold text-center">
@@ -41,8 +48,8 @@ export default function Home() {
                 {typedCampaign && typedCampaign?.length > 0 ? (
 
                     <div className="flex flex-wrap gap-4">
-                        {typedCampaign.filter((campaign) => campaign.owner !== address).map((campaign, index) => (
-                            <CampaignCard {...campaign} key={index} />
+                        {typedCampaign.filter((campaign) => campaign.owner !== address).map((campaign) => (
+                            <CampaignCard campaign={campaign} handleClick={handleNavigate} key={campaign.randomId} />
                         ))}
                     </div>
                 ) : (

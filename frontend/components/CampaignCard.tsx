@@ -1,17 +1,14 @@
 import { Campaign } from "@/app/(root)/page";
+import { daysLeft } from "@/lib";
 import Image from "next/image";
 import { formatEther } from "viem"
 
-const CampaignCard = ({ owner, title, description, target, deadline, amountCollected, image }: Campaign) => {
+const CampaignCard = ({campaign, handleClick} : { campaign: Campaign; handleClick: (randomId: bigint) => void }) => {
 
-  function daysLeft(deadline: bigint) {
-    const difference = new Date(Number(deadline) * 1000).getTime() - Date.now();
-    const remainingDays = difference / (1000 * 3600 * 24);
-    return remainingDays.toFixed(0);
-  };
+  const { image, title, description, amountCollected, deadline, target, owner, randomId } = campaign
 
   return (
-    <div className="sm:w-[288px] w-full rounded-[15px] dark:bg-black cursor-pointer border-8" >
+    <div className="sm:w-[288px] w-full rounded-[15px] dark:bg-black cursor-pointer border-8" onClick={() => handleClick(randomId)}>
       <img src={image} alt="fund" className="w-full h-[158px] object-cover rounded-[15px]" />
 
       <div className="flex flex-col p-4">

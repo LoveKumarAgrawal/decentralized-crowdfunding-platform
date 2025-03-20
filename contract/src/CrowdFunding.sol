@@ -39,7 +39,7 @@ contract CrowdFunding {
             keccak256(
                 abi.encodePacked(block.timestamp, _owner, _target, numberOfCampaigns)
             )
-        );
+        ) % (10**18);
     }
 
     function createCampaign(
@@ -114,6 +114,16 @@ contract CrowdFunding {
         }
 
         return userCampaigns;
+    }
+
+    function getCampaignById(uint256 _randomId) public view returns (Campaign memory) {
+        for(uint256 i=0; i<numberOfCampaigns; i++) {
+            if(campaigns[i].randomId ==  _randomId) {
+                return campaigns[i];
+            }
+        }
+        // Revert if campaign not found
+        revert("Campaign not found");
     }
 
     function getDonators(

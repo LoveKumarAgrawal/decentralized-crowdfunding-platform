@@ -32,6 +32,9 @@ const MyCampaigns = () => {
         return <div>Loading</div>
     }
 
+    const handleNavigate = (randomId: bigint) => {
+        router.push(`/campaign-detail/${randomId}`)
+    }
     const typedCampaign = (campaigns as Campaign[])
 
     return (
@@ -44,7 +47,7 @@ const MyCampaigns = () => {
 
                     <div className="flex flex-wrap gap-4">
                         {typedCampaign.map((campaign, index) => (
-                            <CampaignCard {...campaign} key={index} />
+                            <CampaignCard campaign={campaign} handleClick={handleNavigate} key={index} />
                         ))}
                     </div>
                 ) : (

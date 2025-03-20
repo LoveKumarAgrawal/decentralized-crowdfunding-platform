@@ -11,6 +11,11 @@ export const abi = [
         ],
         "outputs": [
             {
+                "name": "randomId",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
                 "name": "owner",
                 "type": "address",
                 "internalType": "address"
@@ -101,6 +106,77 @@ export const abi = [
     },
     {
         "type": "function",
+        "name": "getCampaignById",
+        "inputs": [
+            {
+                "name": "_randomId",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "tuple",
+                "internalType": "struct CrowdFunding.Campaign",
+                "components": [
+                    {
+                        "name": "randomId",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "owner",
+                        "type": "address",
+                        "internalType": "address"
+                    },
+                    {
+                        "name": "title",
+                        "type": "string",
+                        "internalType": "string"
+                    },
+                    {
+                        "name": "description",
+                        "type": "string",
+                        "internalType": "string"
+                    },
+                    {
+                        "name": "target",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "deadline",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "amountCollected",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "image",
+                        "type": "string",
+                        "internalType": "string"
+                    },
+                    {
+                        "name": "funders",
+                        "type": "address[]",
+                        "internalType": "address[]"
+                    },
+                    {
+                        "name": "donations",
+                        "type": "uint256[]",
+                        "internalType": "uint256[]"
+                    }
+                ]
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
         "name": "getCampaigns",
         "inputs": [],
         "outputs": [
@@ -109,6 +185,11 @@ export const abi = [
                 "type": "tuple[]",
                 "internalType": "struct CrowdFunding.Campaign[]",
                 "components": [
+                    {
+                        "name": "randomId",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
                     {
                         "name": "owner",
                         "type": "address",
@@ -199,6 +280,11 @@ export const abi = [
                 "type": "tuple[]",
                 "internalType": "struct CrowdFunding.Campaign[]",
                 "components": [
+                    {
+                        "name": "randomId",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
                     {
                         "name": "owner",
                         "type": "address",
