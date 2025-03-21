@@ -2,11 +2,11 @@
 import CountBox from "@/components/CountBox";
 import { Button } from "@/components/ui/button"
 import { abi } from "@/lib/abi";
-import { useAccount, useReadContract } from "wagmi";
+import { useAccount, useReadContract, useSendTransaction } from "wagmi";
 import { Campaign } from "../../page";
-import { daysLeft, getDonations } from "@/lib";
+import { calculateBarPercentage, daysLeft, getDonations } from "@/lib";
 import { useParams, useRouter } from "next/navigation";
-import { formatEther } from "viem";
+import { formatEther, parseEther } from "viem";
 import { useEffect } from "react";
 
 const CampaignDetail = () => {
@@ -30,17 +30,21 @@ const CampaignDetail = () => {
     args: [param.id],
   })
 
+  const { data: hash, isPending: transactionPending, sendTransaction } = useSendTransaction()
+
+  async function submit(e: React.FormEvent<HTMLFormElement>) { 
+    e.preventDefault() 
+    const formData = new FormData(e.target as HTMLFormElement) 
+    const to = typedCampaign.owner as `0x${string}`
+    const value = String(formData.get('value'))
+    sendTransaction({ to, value: parseEther(value) })
+  }
+
   if (isPending) {
     return <div>Loading</div>
   }
 
   const typedCampaign = (campaigns as Campaign)
-
-  const calculateBarPercentage = (goal: number, raisedAmount: number) => {
-    const percentage = Math.round((raisedAmount * 100) / goal);
-
-    return percentage;
-  };
 
   return (
     <div className="m-auto w-4/5">
@@ -107,13 +111,14 @@ const CampaignDetail = () => {
               Fund the campaign
             </p>
             <div className="mt-[30px]">
+              <form onSubmit={submit}>
               <input
                 type="number"
                 placeholder="ETH 0.1"
                 step="0.01"
                 className="w-full py-[10px] sm:px-[20px] px-[15px] outline-none border-[1px] border-[#3a3a43] bg-transparent font-epilogue text-white text-[18px] leading-[30px] placeholder:text-[#4b5264] rounded-[10px]"
-              // value={amount}
-              // onChange={(e) => setAmount(e.target.value)}
+                name="value"
+                required
               />
 
               <div className="my-[20px] p-4 bg-[#13131a] rounded-[10px]">
@@ -122,9 +127,11 @@ const CampaignDetail = () => {
               </div>
 
               <Button
+              type="submit"
+              disabled={transactionPending}
                 className="w-full bg-[#8c6dfd]"
-              // handleClick={handleDonate}
-              >Fund Campaign</Button>
+              >{transactionPending ? 'Confirming...' : 'Fund Campaign'}</Button>
+              </form>
             </div>
           </div>
         </div>

@@ -18,3 +18,9 @@ export function getDonations (funders: string[], donations: bigint[]) {
 
     return parsedDonations;
 }
+
+export const calculateBarPercentage = (goal: number, raisedAmount: number) => {
+  const percentage = Math.round((raisedAmount * 100) / goal);
+
+  return percentage;
+};
