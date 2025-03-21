@@ -9,18 +9,18 @@ import { Campaign } from "../page";
 
 const MyCampaigns = () => {
 
-    const { address } = useAccount()
+    const { isConnected, address } = useAccount()
     const router = useRouter()
 
     useEffect(() => {
-        if (!address) {
+        if (!isConnected) {
             router.push("/"); // Perform redirection after the initial render
         }
-    }, [address, router]);
-
+    }, [isConnected, router]);
+    
     // Only continue if there's an address
     if (!address) return null;
-
+    
     const { data: campaigns, isPending } = useReadContract({
         address: `0x${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`,
         abi,
@@ -28,14 +28,17 @@ const MyCampaigns = () => {
         args: [address],
     })
 
-    if (isPending) {
-        return <div>Loading</div>
-    }
-
+    
     const handleNavigate = (randomId: bigint) => {
         router.push(`/campaign-detail/${randomId}`)
     }
     const typedCampaign = (campaigns as Campaign[])
+    
+    
+    
+    if (isPending) {
+        return <div>Loading</div>
+    }
 
     return (
         <div className="dark:bg-[#1c1c24] min-h-[661px]">

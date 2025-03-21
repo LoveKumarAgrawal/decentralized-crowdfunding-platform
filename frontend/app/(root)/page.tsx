@@ -4,6 +4,7 @@ import { abi } from "@/lib/abi"
 import { useAccount, useReadContract } from "wagmi"
 import CampaignCard from "@/components/CampaignCard"
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export interface Campaign {
     randomId: bigint;
@@ -28,13 +29,21 @@ export default function Home() {
         functionName: 'getCampaigns',
         args: [],
     })
-
+    
+    const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
+    
+    useEffect(() => {
+        if (campaigns) {
+            const campaignsToDisplay = (campaigns as Campaign[]).filter(
+                (campaign) => campaign.owner !== address
+            );
+            setFilteredCampaigns(campaignsToDisplay);
+        }
+    }, [campaigns, address]);
+    
     if (isPending) {
         return <div>Loading</div>
     }
-
-    const typedCampaign = (campaigns as Campaign[])
-
     const handleNavigate = (randomId: bigint) => {
         router.push(`/campaign-detail/${randomId}`)
     }
@@ -42,13 +51,13 @@ export default function Home() {
     return (
         <div className="dark:bg-[#1c1c24] min-h-[661px]">
             <div className="text-4xl font-bold text-center">
-                All Campaigns ({typedCampaign && typedCampaign?.length > 0 ? typedCampaign.filter((campaign) => campaign.owner !== address).length : ""})
+                All Campaigns ({filteredCampaigns && filteredCampaigns?.length > 0 ? filteredCampaigns.length : ""})
             </div>
             <div className="sm:p-8 p-4">
-                {typedCampaign && typedCampaign?.length > 0 ? (
+                {filteredCampaigns && filteredCampaigns?.length > 0 ? (
 
                     <div className="flex flex-wrap gap-4">
-                        {typedCampaign.filter((campaign) => campaign.owner !== address).map((campaign) => (
+                        {filteredCampaigns.map((campaign) => (
                             <CampaignCard campaign={campaign} handleClick={handleNavigate} key={campaign.randomId} />
                         ))}
                     </div>

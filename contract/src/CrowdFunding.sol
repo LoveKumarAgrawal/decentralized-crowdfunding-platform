@@ -34,12 +34,21 @@ contract CrowdFunding {
         uint256 amount
     );
 
-    function generateRandomId(address _owner, uint256 _target) internal view returns (uint256) {
-        return uint256(
-            keccak256(
-                abi.encodePacked(block.timestamp, _owner, _target, numberOfCampaigns)
-            )
-        ) % (10**18);
+    function generateRandomId(
+        address _owner,
+        uint256 _target
+    ) internal view returns (uint256) {
+        return
+            uint256(
+                keccak256(
+                    abi.encodePacked(
+                        block.timestamp,
+                        _owner,
+                        _target,
+                        numberOfCampaigns
+                    )
+                )
+            ) % (10 ** 18);
     }
 
     function createCampaign(
@@ -116,9 +125,11 @@ contract CrowdFunding {
         return userCampaigns;
     }
 
-    function getCampaignById(uint256 _randomId) public view returns (Campaign memory) {
-        for(uint256 i=0; i<numberOfCampaigns; i++) {
-            if(campaigns[i].randomId ==  _randomId) {
+    function getCampaignById(
+        uint256 _randomId
+    ) public view returns (Campaign memory) {
+        for (uint256 i = 0; i < numberOfCampaigns; i++) {
+            if (campaigns[i].randomId == _randomId) {
                 return campaigns[i];
             }
         }
@@ -132,19 +143,37 @@ contract CrowdFunding {
         return (campaigns[_id].funders, campaigns[_id].donations);
     }
 
-    function donateToCampaign(uint256 _id) public payable {
+    function donateToCampaign(uint256 _randomId) public payable {
         uint256 amount = msg.value;
         require(amount > 0, "Donation amount must be greater than zero.");
 
-        Campaign storage campaign = campaigns[_id];
+        bool campaignFound = false;
+        uint256 campaignIndex;
 
+        // Loop through all campaigns to find the one with the matching randomId
+        for (uint256 i = 0; i < numberOfCampaigns; i++) {
+            if (campaigns[i].randomId == _randomId) {
+                campaignIndex = i; // Store the index of the found campaign
+                campaignFound = true;
+                break;
+            }
+        }
+
+        // Ensure campaign is found
+        require(campaignFound, "Campaign not found");
+
+        // Access the campaign directly using the index
+        Campaign storage campaign = campaigns[campaignIndex];
+
+        // Process the donation
         campaign.funders.push(msg.sender);
         campaign.donations.push(amount);
 
+        // Send the donation to the campaign owner
         (bool sent, ) = payable(campaign.owner).call{value: amount}("");
         if (sent) {
             campaign.amountCollected += amount;
-            emit DonationReceived(_id, msg.sender, amount);
+            emit DonationReceived(_randomId, msg.sender, amount);
         }
     }
 }

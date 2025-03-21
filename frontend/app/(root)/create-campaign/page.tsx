@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 
 const CreateCampaign = () => {
   const router = useRouter()
-  const { address } = useAccount()
+  const { isConnected, address } = useAccount()
   const {
     data: hash,
     error,
@@ -20,12 +20,12 @@ const CreateCampaign = () => {
   } = useWriteContract()
 
   useEffect(() => {
-    if(!address) {
+    if(!isConnected) {
       router.push("/")
     }
-  }, [address, router])
+  }, [isConnected, router])
 
-  if (!address) return null;
+  if (!isConnected) return null;
 
   const formRef = useRef<HTMLFormElement>(null);
 

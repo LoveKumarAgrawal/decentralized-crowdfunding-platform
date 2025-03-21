@@ -32,6 +32,7 @@ contract CrowdFundingTest is Test {
     function testCreateCampaign() public view {
         // Use the getter function to get the campaign details
         (
+            uint256 randomId,
             address campaignOwner,
             string memory campaignTitle,
             string memory campaignDescription,

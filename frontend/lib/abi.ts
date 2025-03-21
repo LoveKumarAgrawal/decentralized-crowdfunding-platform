@@ -96,7 +96,7 @@ export const abi = [
         "name": "donateToCampaign",
         "inputs": [
             {
-                "name": "_id",
+                "name": "_randomId",
                 "type": "uint256",
                 "internalType": "uint256"
             }

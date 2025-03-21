@@ -2,52 +2,84 @@
 import CountBox from "@/components/CountBox";
 import { Button } from "@/components/ui/button"
 import { abi } from "@/lib/abi";
-import { useAccount, useReadContract, useSendTransaction } from "wagmi";
+import { type BaseError, useAccount, useReadContract, useSendTransaction, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { Campaign } from "../../page";
 import { calculateBarPercentage, daysLeft, getDonations } from "@/lib";
 import { useParams, useRouter } from "next/navigation";
 import { formatEther, parseEther } from "viem";
-import { useEffect } from "react";
+import { toast } from "react-toastify"
+import { useEffect, useRef } from "react";
 
 const CampaignDetail = () => {
-  const {address} = useAccount()
-  const router = useRouter()
-  const param = useParams()
-  
-  useEffect(() => {
-      if (!address) {
-          router.push("/"); // Perform redirection after the initial render
-      }
-  }, [address, router]);
+  const { isConnected } = useAccount();
+  const router = useRouter();
+  const param = useParams();
+  const {
+    data: hash,
+    error,
+    isPending: writePending,
+    writeContract,
+  } = useWriteContract();
 
-  // Only continue if there's an address
-  if (!address) return null;
-
-  const { data: campaigns, isPending } = useReadContract({
+  const { data: campaign, isPending } = useReadContract({
     address: `0x${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`,
     abi,
-    functionName: 'getCampaignById',
+    functionName: "getCampaignById",
     args: [param.id],
+  });
+
+  function submit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const value = String(formData.get("value"));
+    writeContract({
+      address: `0x${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`,
+      abi,
+      functionName: "donateToCampaign",
+      args: [typedCampaign.randomId],
+      value: parseEther(value)
+    });    
+  }
+
+  const typedCampaign = campaign as Campaign;
+  const formRef = useRef<HTMLFormElement>(null);
+
+  
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
   })
 
-  const { data: hash, isPending: transactionPending, sendTransaction } = useSendTransaction()
+  useEffect(() => {
+    if (error) {
+      toast.error(`Error: ${(error as BaseError).shortMessage || error.message}`, {
+        position: 'top-left',
+        autoClose: 5000,
+      })
+    }
+    if (isConfirmed) {
+      toast.success('Funded successfully', {
+        position: 'top-left',
+        autoClose: 5000,
+      })
+      if (formRef.current) {
+        formRef.current.reset(); // Resets the form fields to their initial values
+      }
+    }
+  }, [error, isConfirmed])
 
-  async function submit(e: React.FormEvent<HTMLFormElement>) { 
-    e.preventDefault() 
-    const formData = new FormData(e.target as HTMLFormElement) 
-    const to = typedCampaign.owner as `0x${string}`
-    const value = String(formData.get('value'))
-    sendTransaction({ to, value: parseEther(value) })
+  useEffect(() => {
+    if (!isConnected) {
+      router.push("/");
+    }
+  }, [isConnected, router]);
+
+  if (!isConnected) {
+    return <div>Redirecting...</div>;
   }
-
-  if (isPending) {
-    return <div>Loading</div>
-  }
-
-  const typedCampaign = (campaigns as Campaign)
 
   return (
-    <div className="m-auto w-4/5">
+    !isPending && <div className="m-auto w-4/5">
       <div className="w-full flex md:flex-row flex-col mt-10 gap-[30px]">
         <div className="flex-1 flex-col">
           <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX8JhqQhRQ1LRy-tR-nfP5y_IaWSokEzrLwg&s" alt="campaign" className="w-full h-[410px] object-cover rounded-xl" />
@@ -111,26 +143,26 @@ const CampaignDetail = () => {
               Fund the campaign
             </p>
             <div className="mt-[30px]">
-              <form onSubmit={submit}>
-              <input
-                type="number"
-                placeholder="ETH 0.1"
-                step="0.01"
-                className="w-full py-[10px] sm:px-[20px] px-[15px] outline-none border-[1px] border-[#3a3a43] bg-transparent font-epilogue text-white text-[18px] leading-[30px] placeholder:text-[#4b5264] rounded-[10px]"
-                name="value"
-                required
-              />
+              <form ref={formRef} onSubmit={submit}>
+                <input
+                  type="number"
+                  placeholder="ETH 0.1"
+                  step="0.01"
+                  className="w-full py-[10px] sm:px-[20px] px-[15px] outline-none border-[1px] border-[#3a3a43] bg-transparent font-epilogue text-white text-[18px] leading-[30px] placeholder:text-[#4b5264] rounded-[10px]"
+                  name="value"
+                  required
+                />
 
-              <div className="my-[20px] p-4 bg-[#13131a] rounded-[10px]">
-                <h4 className="font-epilogue font-semibold text-[14px] leading-[22px] text-white">Back it because you believe in it.</h4>
-                <p className="mt-[20px] font-epilogue font-normal leading-[22px] text-[#808191]">Support the project for no reward, just because it speaks to you.</p>
-              </div>
+                <div className="my-[20px] p-4 bg-[#13131a] rounded-[10px]">
+                  <h4 className="font-epilogue font-semibold text-[14px] leading-[22px] text-white">Back it because you believe in it.</h4>
+                  <p className="mt-[20px] font-epilogue font-normal leading-[22px] text-[#808191]">Support the project for no reward, just because it speaks to you.</p>
+                </div>
 
-              <Button
-              type="submit"
-              disabled={transactionPending}
-                className="w-full bg-[#8c6dfd]"
-              >{transactionPending ? 'Confirming...' : 'Fund Campaign'}</Button>
+                <Button
+                  type="submit"
+                  disabled={writePending || isConfirming}
+                  className="w-full bg-[#8c6dfd] cursor-pointer"
+                >{writePending || isConfirming ? 'Funding...' : 'Fund Campaign'}</Button>
               </form>
             </div>
           </div>
