@@ -2,7 +2,7 @@
 import CountBox from "@/components/CountBox";
 import { Button } from "@/components/ui/button"
 import { abi } from "@/lib/abi";
-import { type BaseError, useAccount, useReadContract, useSendTransaction, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { type BaseError, useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { Campaign } from "../../page";
 import { calculateBarPercentage, daysLeft, getDonations } from "@/lib";
 import { useParams, useRouter } from "next/navigation";

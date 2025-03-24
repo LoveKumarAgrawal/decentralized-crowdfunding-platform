@@ -2,7 +2,7 @@
 import FormField from '@/components/FormField';
 import { Button } from '@/components/ui/button';
 import { HandCoins } from 'lucide-react';
-import React, { FormEvent, useEffect, useRef, useState } from 'react'
+import React, { FormEvent, useEffect, useRef } from 'react'
 import { type BaseError, useAccount, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { abi } from '@/lib/abi';
 import { parseEther } from 'viem';
@@ -18,14 +18,6 @@ const CreateCampaign = () => {
     isPending,
     writeContract
   } = useWriteContract()
-
-  useEffect(() => {
-    if(!isConnected) {
-      router.push("/")
-    }
-  }, [isConnected, router])
-
-  if (!isConnected) return null;
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -71,6 +63,14 @@ const CreateCampaign = () => {
       }
     }
   }, [error, isConfirmed])
+
+  useEffect(() => {
+    if(!isConnected) {
+      router.push("/")
+    }
+  }, [isConnected, router])
+
+  if (!isConnected) return null;
 
   return (
     <div className="dark:bg-[#1c1c24] flex justify-center items-center flex-col sm:p-10 p-4">

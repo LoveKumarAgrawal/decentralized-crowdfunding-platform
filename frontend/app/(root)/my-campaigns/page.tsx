@@ -12,15 +12,6 @@ const MyCampaigns = () => {
     const { isConnected, address } = useAccount()
     const router = useRouter()
 
-    useEffect(() => {
-        if (!isConnected) {
-            router.push("/"); // Perform redirection after the initial render
-        }
-    }, [isConnected, router]);
-    
-    // Only continue if there's an address
-    if (!address) return null;
-    
     const { data: campaigns, isPending } = useReadContract({
         address: `0x${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`,
         abi,
@@ -28,20 +19,22 @@ const MyCampaigns = () => {
         args: [address],
     })
 
-    
+
     const handleNavigate = (randomId: bigint) => {
         router.push(`/campaign-detail/${randomId}`)
     }
     const typedCampaign = (campaigns as Campaign[])
-    
-    
-    
-    if (isPending) {
-        return <div>Loading</div>
-    }
+
+    useEffect(() => {
+        if (!isConnected) {
+            router.push("/");
+        }
+    }, [isConnected, router]);
+
+    if (!isConnected) return null;
 
     return (
-        <div className="dark:bg-[#1c1c24] min-h-[661px]">
+        !isPending && <div className="dark:bg-[#1c1c24] min-h-[661px]">
             <div className="text-4xl font-bold text-center">
                 Your Campaigns ({typedCampaign && typedCampaign?.length > 0 ? typedCampaign.length : ""})
             </div>
