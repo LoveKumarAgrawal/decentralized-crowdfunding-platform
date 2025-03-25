@@ -12,7 +12,7 @@ const MyCampaigns = () => {
     const { isConnected, address } = useAccount()
     const router = useRouter()
 
-    const { data: campaigns, isPending } = useReadContract({
+    const { data: campaigns } = useReadContract({
         address: `0x${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`,
         abi,
         functionName: 'getMyCampaigns',
@@ -34,7 +34,7 @@ const MyCampaigns = () => {
     if (!isConnected) return null;
 
     return (
-        !isPending && <div className="dark:bg-[#1c1c24] min-h-[661px]">
+        <div className="dark:bg-[#1c1c24] min-h-[661px]">
             <div className="text-4xl font-bold text-center">
                 Your Campaigns ({typedCampaign && typedCampaign?.length > 0 ? typedCampaign.length : ""})
             </div>

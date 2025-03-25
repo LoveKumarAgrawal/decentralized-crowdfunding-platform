@@ -11,6 +11,7 @@ import { toast } from "react-toastify"
 import { useEffect, useRef } from "react";
 
 const CampaignDetail = () => {
+
   const { isConnected } = useAccount();
   const router = useRouter();
   const param = useParams();
@@ -21,7 +22,7 @@ const CampaignDetail = () => {
     writeContract,
   } = useWriteContract();
 
-  const { data: campaign, isPending } = useReadContract({
+  const { data: campaign } = useReadContract({
     address: `0x${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`,
     abi,
     functionName: "getCampaignById",
@@ -74,12 +75,10 @@ const CampaignDetail = () => {
     }
   }, [isConnected, router]);
 
-  if (!isConnected) {
-    return <div>Redirecting...</div>;
-  }
+  if (!isConnected) return null;
 
   return (
-    !isPending && <div className="m-auto w-4/5">
+    typedCampaign && <div className="m-auto w-4/5">
       <div className="w-full flex md:flex-row flex-col mt-10 gap-[30px]">
         <div className="flex-1 flex-col">
           <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX8JhqQhRQ1LRy-tR-nfP5y_IaWSokEzrLwg&s" alt="campaign" className="w-full h-[410px] object-cover rounded-xl" />
