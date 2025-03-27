@@ -5,16 +5,17 @@ import { abi } from "@/lib/abi";
 import { type BaseError, useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { Campaign } from "../../page";
 import { calculateBarPercentage, daysLeft, getDonations } from "@/lib";
-import { useParams, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { formatEther, parseEther } from "viem";
 import { toast } from "react-toastify"
-import { useEffect, useRef } from "react";
+import { use, useEffect, useRef } from "react";
 
-const CampaignDetail = () => {
+const CampaignDetail = ({ params }: { 
+  params: Promise<{ id: string }>
+ }) => {
 
+  const { id } = use(params);
   const { isConnected } = useAccount();
-  const router = useRouter();
-  const param = useParams();
   const {
     data: hash,
     error,
@@ -26,7 +27,7 @@ const CampaignDetail = () => {
     address: `0x${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`,
     abi,
     functionName: "getCampaignById",
-    args: [param.id],
+    args: [id],
   });
 
   function submit(e: React.FormEvent<HTMLFormElement>) {
@@ -71,9 +72,9 @@ const CampaignDetail = () => {
 
   useEffect(() => {
     if (!isConnected) {
-      router.push("/");
+      redirect("/");
     }
-  }, [isConnected, router]);
+  }, [isConnected]);
 
   if (!isConnected) return null;
 

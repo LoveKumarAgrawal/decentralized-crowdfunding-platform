@@ -1,6 +1,6 @@
 "use client"
 import CampaignCard from "@/components/CampaignCard";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAccount, useReadContract } from "wagmi"
 import { abi } from "@/lib/abi";
@@ -27,9 +27,9 @@ const MyCampaigns = () => {
 
     useEffect(() => {
         if (!isConnected) {
-            router.push("/");
+            redirect("/");
         }
-    }, [isConnected, router]);
+    }, [isConnected]);
 
     if (!isConnected) return null;
 
