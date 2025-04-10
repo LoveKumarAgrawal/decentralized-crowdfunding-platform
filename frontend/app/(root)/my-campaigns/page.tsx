@@ -4,7 +4,7 @@ import { redirect, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAccount, useReadContract } from "wagmi"
 import { abi } from "@/lib/abi";
-import { Campaign } from "../page";
+import { Campaign } from "../all-campaigns/page";
 
 
 const MyCampaigns = () => {
@@ -34,7 +34,7 @@ const MyCampaigns = () => {
     if (!isConnected) return null;
 
     return (
-        <div className="dark:bg-[#1c1c24] min-h-[661px]">
+        <div className="flex flex-col items-center">
             <div className="text-4xl font-bold text-center">
                 Your Campaigns ({typedCampaign && typedCampaign?.length > 0 ? typedCampaign.length : ""})
             </div>

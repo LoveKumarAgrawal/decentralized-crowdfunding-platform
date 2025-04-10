@@ -3,7 +3,7 @@ import CountBox from "@/components/CountBox";
 import { Button } from "@/components/ui/button"
 import { abi } from "@/lib/abi";
 import { type BaseError, useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { Campaign } from "../../page";
+import { Campaign } from "../../all-campaigns/page";
 import { calculateBarPercentage, daysLeft, getDonations } from "@/lib";
 import { redirect } from "next/navigation";
 import { formatEther, parseEther } from "viem";

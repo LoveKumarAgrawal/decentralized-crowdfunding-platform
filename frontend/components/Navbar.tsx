@@ -28,12 +28,12 @@ function Navbar() {
   }
 
   return (
-    <nav className="p-4 shadow-md dark:bg-gray-800">
+    <nav className="py-4 px-14">
       <div className="flex md:flex-row flex-col justify-between items-center">
-        <Link href="/" className="text-xl font-bold mb-4 md:mb-0 dark:text-gray-200">
-          Decentralized CrowdFunding
+        <Link href="/" className="text-3xl font-bold mb-4 md:mb-0 dark:text-white">
+          CrowdFund
         </Link>
-        <div className="flex flex-col md:flex-row gap-3 justify-between items-center">
+        <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
           <ModeToggle />
           {
             address && (
@@ -64,7 +64,7 @@ function Navbar() {
             </div>
           ) : (
             <Button
-              className="bg-black text-white dark:bg-slate-100 dark:text-black cursor-pointer"
+              className="rounded-3xl cursor-pointer px-6 text-[17px] bg-gradient-to-r from-[#9f96f0] to-[#5454f9]"
               onClick={() => connect({ connector: connectors[0] })}
               variant="outline"
             >

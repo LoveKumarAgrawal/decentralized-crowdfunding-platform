@@ -1,4 +1,4 @@
-import { Campaign } from "@/app/(root)/page";
+import { Campaign } from "@/app/(root)/all-campaigns/page";
 import { daysLeft } from "@/lib";
 import Image from "next/image";
 import { formatEther } from "viem"
