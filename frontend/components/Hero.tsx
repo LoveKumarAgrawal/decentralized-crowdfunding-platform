@@ -7,11 +7,11 @@ const Hero = () => {
     const router = useRouter()
     return (
         <section className="py-20 px-6 lg:px-24">
-            <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-16">
+            <div className="flex flex-col-reverse lg:flex-row justify-between gap-16">
                 
                 {/* Text Content */}
                 <div className="space-y-6">
-                    <h1 className="text-4xl lg:text-7xl font-mono lg:leading-20 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-indigo-900">
+                    <h1 className="text-4xl lg:text-7xl font-mono lg:leading-20 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-indigo-900 py-3">
                         <span>Crowdfunding</span> <br className="hidden lg:block" />
                         <span>with Crypto</span>
                     </h1>

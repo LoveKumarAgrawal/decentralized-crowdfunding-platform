@@ -29,8 +29,8 @@ function Navbar() {
 
   return (
     <nav className="py-4 px-14">
-      <div className="flex md:flex-row flex-col justify-between items-center">
-        <Link href="/" className="text-3xl font-bold mb-4 md:mb-0 dark:text-white">
+      <div className="flex md:flex-row flex-col justify-between">
+        <Link href="/" className="text-3xl font-bold mb-4 md:mb-0 dark:text-white text-center">
           CrowdFund
         </Link>
         <div className="flex flex-col md:flex-row gap-4 justify-between items-center">

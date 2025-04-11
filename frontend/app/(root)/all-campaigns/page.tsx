@@ -49,8 +49,7 @@ const AllCampaigns = () => {
     }
 
     return (
-        <>
-        <div className="flex flex-col justify-center h-full">
+        <div className="flex flex-col justify-center items-center min-h-full w-full">
             <div className="text-4xl font-bold text-center dark:text-white">
                 All Campaigns ({filteredCampaigns && filteredCampaigns?.length > 0 ? filteredCampaigns.length : ""})
             </div>
@@ -68,8 +67,7 @@ const AllCampaigns = () => {
                     </div>
                 )}
             </div>
-            </div>
-        </>
+        </div>
     );
 }
 
