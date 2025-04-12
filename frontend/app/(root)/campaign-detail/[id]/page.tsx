@@ -82,7 +82,7 @@ const CampaignDetail = ({ params }: {
     typedCampaign && <div className="m-auto w-4/5">
       <div className="w-full flex md:flex-row flex-col mt-10 gap-[30px]">
         <div className="flex-1 flex-col">
-          <img src={typedCampaign.image} alt="campaign" className="w-full h-[410px] object-cover rounded-xl" />
+          <img src={typedCampaign.image} alt="campaign" className="w-full h-[410px] object-fill rounded-xl" />
           <div className="relative w-full h-[5px] bg-[#3a3a43] mt-2">
             <div className="absolute h-full bg-[#4acd8d]" style={{ width: `${calculateBarPercentage(Number(typedCampaign.target), Number(typedCampaign.amountCollected))}%`, maxWidth: '100%' }}>
             </div>
@@ -99,20 +99,20 @@ const CampaignDetail = ({ params }: {
       <div className="mt-[60px] flex lg:flex-row flex-col gap-5">
         <div className="flex-[2] flex flex-col gap-[40px]">
           <div>
-            <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">Creator</h4>
+            <h4 className="font-epilogue font-semibold text-[18px] uppercase">Creator</h4>
 
             <div className="mt-[20px] flex flex-row items-center flex-wrap gap-[14px]">
               <div className="w-[52px] h-[52px] flex items-center justify-center rounded-full bg-[#2c2f32] cursor-pointer">
                 <img src="/donate.png" alt="user" className="w-[60%] h-[60%] object-contain" />
               </div>
               <div>
-                <h4 className="font-epilogue font-semibold text-[14px] text-white break-all">{typedCampaign.owner}</h4>
+                <h4 className="font-epilogue font-semibold text-[14px] break-all">{typedCampaign.owner}</h4>
               </div>
             </div>
           </div>
 
           <div>
-            <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">Story</h4>
+            <h4 className="font-epilogue font-semibold text-[18px] uppercase">Story</h4>
 
             <div className="mt-[20px]">
               <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify">{typedCampaign.description}</p>
@@ -120,7 +120,7 @@ const CampaignDetail = ({ params }: {
           </div>
 
           <div>
-            <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">Donators</h4>
+            <h4 className="font-epilogue font-semibold text-[18px] uppercase">Donators</h4>
 
             <div className="mt-[20px] flex flex-col gap-4">
               {getDonations(typedCampaign.funders, typedCampaign.donations).length > 0 ? getDonations(typedCampaign.funders, typedCampaign.donations).map((item, index) => (
@@ -136,7 +136,7 @@ const CampaignDetail = ({ params }: {
         </div>
 
         <div className="flex-1">
-          <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">Fund</h4>
+          <h4 className="font-epilogue font-semibold text-[18px] uppercase">Fund</h4>
 
           <div className="mt-[20px] flex flex-col p-4 bg-[#1c1c24] rounded-[10px]">
             <p className="font-epilogue fount-medium text-[20px] leading-[30px] text-center text-[#808191]">
