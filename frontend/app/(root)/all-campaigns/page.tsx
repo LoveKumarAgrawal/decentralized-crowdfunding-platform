@@ -56,7 +56,7 @@ const AllCampaigns = () => {
             <div className="sm:p-8 p-4">
                 {filteredCampaigns && filteredCampaigns?.length > 0 ? (
 
-                    <div className="flex flex-wrap gap-4">
+                    <div className="flex flex-wrap gap-4 justify-center">
                         {filteredCampaigns.map((campaign) => (
                             <CampaignCard campaign={campaign} handleClick={handleNavigate} key={campaign.randomId} />
                         ))}

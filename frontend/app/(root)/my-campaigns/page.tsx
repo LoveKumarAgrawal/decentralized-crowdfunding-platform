@@ -41,7 +41,7 @@ const MyCampaigns = () => {
             <div className="sm:p-8 p-4">
                 {typedCampaign && typedCampaign?.length > 0 ? (
 
-                    <div className="flex flex-wrap gap-4">
+                    <div className="flex flex-wrap gap-4 justify-center">
                         {typedCampaign.map((campaign, index) => (
                             <CampaignCard campaign={campaign} handleClick={handleNavigate} key={index} />
                         ))}

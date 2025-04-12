@@ -82,7 +82,7 @@ const CampaignDetail = ({ params }: {
     typedCampaign && <div className="m-auto w-4/5">
       <div className="w-full flex md:flex-row flex-col mt-10 gap-[30px]">
         <div className="flex-1 flex-col">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX8JhqQhRQ1LRy-tR-nfP5y_IaWSokEzrLwg&s" alt="campaign" className="w-full h-[410px] object-cover rounded-xl" />
+          <img src={typedCampaign.image} alt="campaign" className="w-full h-[410px] object-cover rounded-xl" />
           <div className="relative w-full h-[5px] bg-[#3a3a43] mt-2">
             <div className="absolute h-full bg-[#4acd8d]" style={{ width: `${calculateBarPercentage(Number(typedCampaign.target), Number(typedCampaign.amountCollected))}%`, maxWidth: '100%' }}>
             </div>

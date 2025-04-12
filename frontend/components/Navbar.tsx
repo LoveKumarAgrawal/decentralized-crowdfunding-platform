@@ -38,7 +38,7 @@ function Navbar() {
           {
             address && (
               <Button
-            className="bg-green-400 dark:bg-green-500 cursor-pointer"
+            className="bg-gradient-to-r from-[#35af74] to-[#aaea6b] cursor-pointer"
             variant="ghost"
             onClick={() => router.push('/create-campaign')}
           >
@@ -48,7 +48,7 @@ function Navbar() {
           }
           {address && (
             <Button
-              className="bg-green-400 dark:bg-green-500 cursor-pointer"
+              className="bg-gradient-to-r from-[#35af74] to-[#aaea6b] cursor-pointer"
               variant="ghost"
               onClick={() => router.push('/my-campaigns')}
             >
