@@ -1,5 +1,3 @@
-import React from 'react'
-
 const FormField = ({ labelName, placeholder, inputType, isTextArea, name }: { labelName: string; placeholder: string; inputType?: string; isTextArea?: boolean; name: string}) => {
     return (
         <label className="flex-1 w-full flex flex-col">

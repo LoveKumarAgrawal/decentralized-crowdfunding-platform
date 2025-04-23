@@ -8,7 +8,7 @@ import { calculateBarPercentage, daysLeft, getDonations } from "@/lib";
 import { redirect } from "next/navigation";
 import { formatEther, parseEther } from "viem";
 import { toast } from "react-toastify"
-import { use, useEffect, useRef } from "react";
+import { use, useEffect, useMemo, useRef } from "react";
 
 const CampaignDetail = ({ params }: { 
   params: Promise<{ id: string }>
@@ -43,9 +43,8 @@ const CampaignDetail = ({ params }: {
     });    
   }
 
-  const typedCampaign = campaign as Campaign;
+  const typedCampaign = useMemo(() => campaign as Campaign, [campaign])
   const formRef = useRef<HTMLFormElement>(null);
-
   
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({
@@ -64,9 +63,7 @@ const CampaignDetail = ({ params }: {
         position: 'top-left',
         autoClose: 5000,
       })
-      if (formRef.current) {
-        formRef.current.reset(); // Resets the form fields to their initial values
-      }
+      formRef.current?.reset(); // Resets the form fields to their initial values
     }
   }, [error, isConfirmed])
 

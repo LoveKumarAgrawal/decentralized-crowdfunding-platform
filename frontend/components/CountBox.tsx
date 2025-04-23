@@ -1,5 +1,3 @@
-import React from 'react'
-
 const CountBox = ({ title, value }: { title: string; value: string; }) => {
   return (
     <div className="flex flex-col items-center w-[150px]">

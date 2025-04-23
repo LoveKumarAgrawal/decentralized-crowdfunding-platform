@@ -7,11 +7,10 @@ import { type BaseError, useAccount, useWaitForTransactionReceipt, useWriteContr
 import { abi } from '@/lib/abi';
 import { parseEther } from 'viem';
 import { toast } from "react-toastify"
-import { redirect, useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 const CreateCampaign = () => {
   const { isConnected, address } = useAccount()
-  const router = useRouter()
 
   const {
     data: hash,

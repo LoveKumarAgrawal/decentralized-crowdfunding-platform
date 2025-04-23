@@ -4,7 +4,7 @@ import { abi } from "@/lib/abi"
 import { useAccount, useReadContract } from "wagmi"
 import CampaignCard from "@/components/CampaignCard"
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 export interface Campaign {
     randomId: bigint;
@@ -30,16 +30,12 @@ const AllCampaigns = () => {
         args: [],
     })
 
-    const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
-
-    useEffect(() => {
-        if (campaigns) {
-            const campaignsToDisplay = (campaigns as Campaign[]).filter(
-                (campaign) => campaign.owner !== address
-            );
-            setFilteredCampaigns(campaignsToDisplay);
-        }
-    }, [campaigns, address]);
+    const filteredCampaigns = useMemo(() => {
+        if(!campaigns) return [];
+        return (campaigns as Campaign[]).filter(
+            (campaign) => campaign.owner !== address
+        )
+    }, [address, campaigns])
 
     if (isPending) {
         return <div>Loading</div>

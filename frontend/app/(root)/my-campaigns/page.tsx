@@ -1,11 +1,10 @@
 "use client"
 import CampaignCard from "@/components/CampaignCard";
 import { redirect, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useAccount, useReadContract } from "wagmi"
 import { abi } from "@/lib/abi";
 import { Campaign } from "../all-campaigns/page";
-
 
 const MyCampaigns = () => {
 
@@ -19,11 +18,7 @@ const MyCampaigns = () => {
         args: [address],
     })
 
-
-    const handleNavigate = (randomId: bigint) => {
-        router.push(`/campaign-detail/${randomId}`)
-    }
-    const typedCampaign = (campaigns as Campaign[])
+    const typedCampaigns = useMemo(() => campaigns as Campaign[] ?? [], [campaigns]);
 
     useEffect(() => {
         if (!isConnected) {
@@ -36,14 +31,14 @@ const MyCampaigns = () => {
     return (
         <div className="flex flex-col items-center">
             <div className="text-4xl font-bold text-center">
-                Your Campaigns ({typedCampaign && typedCampaign?.length > 0 ? typedCampaign.length : ""})
+            Your Campaigns {typedCampaigns.length > 0 && `(${typedCampaigns.length})`}
             </div>
             <div className="sm:p-8 p-4">
-                {typedCampaign && typedCampaign?.length > 0 ? (
+            {typedCampaigns.length > 0 ? (
 
                     <div className="flex flex-wrap gap-4 justify-center">
-                        {typedCampaign.map((campaign, index) => (
-                            <CampaignCard campaign={campaign} handleClick={handleNavigate} key={index} />
+                        {typedCampaigns.map((campaign, index) => (
+                            <CampaignCard key={index} campaign={campaign} handleClick={(id) => router.push(`/campaign-detail/${id}`)} />
                         ))}
                     </div>
                 ) : (
